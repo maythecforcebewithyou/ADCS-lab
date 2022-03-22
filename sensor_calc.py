@@ -51,13 +51,9 @@ def set_initial(mag_offset = [0,0,0]):
     magX, magY, magZ = sensor.magnetic
     #Calibrate magnetometer readings. Defaults to zero until you
     
-    offset = calibrate_mag()
-    #offset = calibrate_gyro()
-    
-    #write the code
-    magX = magX - offset[0]
-    magY = magY - offset[1]
-    magZ = magZ - offset[2]
+    magX = magX - mag_offset[0]
+    magY = magY - mag_offset[1]
+    magZ = magZ - mag_offset[2]
     roll = roll_am(accelX, accelY,accelZ)
     pitch = pitch_am(accelX,accelY,accelZ)
     yaw = yaw_am(accelX,accelY,accelZ,magX,magY,magZ)
@@ -68,10 +64,13 @@ def calibrate_mag():
     #TODO: Set up lists, time, etc
     minX, minY, minZ = sensor.magnetic
     maxX, maxY, maxZ = sensor.magnetic
-    timer = time.time()
+    
     print("Preparing to calibrate magnetometer. Please wave around.")
-    #time.sleep(3)
-    while(time.time() < timer + 3):
+    time.sleep(3)
+    
+    print("Calibrating...")
+    timer = time.time()
+    while(time.time() < timer + 5): # collect data for 5 seconds
         magX, magY, magZ = sensor.magnetic
         if magX < minX: minX = magX
         elif magX > maxX: maxX = magX
@@ -80,19 +79,32 @@ def calibrate_mag():
         if magZ < minZ: minZ = magZ
         elif magZ > maxZ: maxZ = magZ
         #print(time.time() - timer)
-    print("Calibrating...")
     #TODO: Calculate calibration constants
     avgX = (minX + maxX) / 2
     avgY = (minY + maxY) / 2
     avgZ = (minZ + maxZ) / 2
-    #print("Calibration complete.")
+    print("Calibration complete.")
     return [avgX, avgY, avgZ]
 
 def calibrate_gyro():
-    #TODO
-    #print("Preparing to calibrate gyroscope. Put down the board and do not touch it.")
-    #time.sleep(3)
-    #print("Calibrating...")
-    #TODO
-    #print("Calibration complete.")
-    return [0, 0, 0]
+    minX, minY, minZ = sensor.gyro
+    maxX, maxY, maxZ = sensor.gyro
+    print("Preparing to calibrate gyroscope. Put down the board and do not touch it.")
+    time.sleep(3)
+    
+    print("Calibrating...")
+    timer = time.time()
+    while(time.time() < timer + 5): # collect data for 5 seconds
+        gyroX, gyroY, gyroZ = sensor.gyro
+        if gyroX < minX: minX = gyroX
+        elif gyroX > maxX: maxX = gyroX
+        if gyroY < minY: minY = gyroY
+        elif gyroY > maxY: maxY = gyroY
+        if gyroZ < minZ: minZ = gyroZ
+        elif gyroZ > maxZ: maxZ = gyroZ
+        #print(time.time() - timer)
+    avgX = (minX + maxX) / 2
+    avgY = (minY + maxY) / 2
+    avgZ = (minZ + maxZ) / 2
+    print("Calibration complete.")
+    return [avgX*180/np.pi, avgY*180/np.pi, avgZ*180/np.pi]
