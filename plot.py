@@ -1,5 +1,5 @@
-import adafruit_fxos8700
-import adafruit_fxas21002c
+#import adafruit_fxos8700
+#import adafruit_fxas21002c
 import adafruit_bno055
 
 import time
@@ -17,8 +17,8 @@ from sensor_calc import *
 i2c = busio.I2C(board.SCL, board.SDA)
 #sensor1 = adafruit_fxos8700.FXOS8700(i2c)
 #sensor2 = adafruit_fxas21002c.FXAS21002C(i2c)
-sensor1 = adafruit_bno055.BNO055_I2C(i2c)
-sensor2 = adafruit_bno055.BNO055_I2C(i2c)
+sensor = adafruit_bno055.BNO055_I2C(i2c)
+
 fig = plt.figure()
 ax = fig.add_subplot(1,1,1)
 xs = []
@@ -35,13 +35,13 @@ def animate(i, xs, type,y1,y2,y3, mag_offset, gyro_offset, initial_angle):
         b = y2[-1]
         c = y3[-1]
         prev_ang = [a,b,c]
-    accelX, accelY, accelZ = sensor1.accelerometer #m/s^2
-    magX, magY, magZ = sensor1.magnetometer #gauss
+    accelX, accelY, accelZ = sensor.acceleration #m/s^2
+    magX, magY, magZ = sensor.magnetic
     #Calibrate magnetometer readings
     magX = magX - mag_offset[0]
     magY = magY - mag_offset[1]
     magZ = magZ - mag_offset[2]
-    gyroX, gyroY, gyroZ = sensor2.gyroscope #rad/s
+    gyroX, gyroY, gyroZ = sensor.gyroscope #rad/s
     gyroX = gyroX * (180/np.pi)- gyro_offset[0]
     gyroY = gyroY * (180/np.pi)- gyro_offset[1]
     gyroZ = gyroZ * (180/np.pi)- gyro_offset[2]
