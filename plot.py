@@ -33,8 +33,8 @@ def animate(i, xs, type,y1,y2,y3, mag_offset, gyro_offset, initial_angle):
     else:
         a = y1[-1]
         b = y2[-1]
-        c = y3[-1]
-        prev_ang = [a,b,c]
+        #c = y3[-1]
+        prev_ang = [a,b]#,c]
     accelX, accelY, accelZ = sensor.acceleration #m/s^2
     magX, magY, magZ = sensor.magnetic
     #Calibrate magnetometer readings
@@ -50,11 +50,11 @@ def animate(i, xs, type,y1,y2,y3, mag_offset, gyro_offset, initial_angle):
     if type == 'am':
        y1.append(roll_am(accelX,accelY,accelZ))
        y2.append(pitch_am(accelX,accelY,accelZ))
-       y3.append(yaw_am(accelX,accelY,accelZ,magX,magY,magZ))
+       #y3.append(yaw_am(accelX,accelY,accelZ,magX,magY,magZ))
        ax.clear()
        ax.plot(xs,y1,label = "Roll")
        ax.plot(xs,y2,label = "Pitch")
-       ax.plot(xs,y3,label = "Yaw")
+       #ax.plot(xs,y3,label = "Yaw")
        plt.title('Roll Pitch Yaw, Using Accelerometer and Magnetometer')
        plt.ylabel('deg')
 
@@ -62,17 +62,17 @@ def animate(i, xs, type,y1,y2,y3, mag_offset, gyro_offset, initial_angle):
        if len(xs) == 1:
            y1.append(prev_ang[0])
            y2.append(prev_ang[1])
-           y3.append(prev_ang[2])
+           #y3.append(prev_ang[2])
        else:
            delT = xs[-1] - xs[-2]
            y1.append(roll_gy(prev_ang[0],delT,gyroY))
            y2.append(pitch_gy(prev_ang[1],delT,gyroX))
-           y3.append(yaw_gy(prev_ang[2],delT,gyroZ))
+           #y3.append(yaw_gy(prev_ang[2],delT,gyroZ))
 
        ax.clear()
        ax.plot(xs,y1,label = "Roll")
        ax.plot(xs,y2,label = "Pitch")
-       ax.plot(xs,y3,label = "Yaw")
+       #ax.plot(xs,y3,label = "Yaw")
        plt.title('Roll Pitch Yaw, Using Gyro')
        plt.ylabel('deg')
 
@@ -83,7 +83,7 @@ def animate(i, xs, type,y1,y2,y3, mag_offset, gyro_offset, initial_angle):
     xs = xs[-20:]
     y1 = y1[-20:]
     y2 = y2[-20:]
-    y3 = y3[-20:]
+    #y3 = y3[-20:]
     plt.grid()
     plt.legend()
     plt.xlabel('Time')

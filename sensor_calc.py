@@ -18,11 +18,11 @@ sensor = adafruit_bno055.BNO055_I2C(i2c)
 #Activity 1: RPY based on accelerometer and magnetometer
 def roll_am(accelX,accelY,accelZ):
     roll = np.arctan(accelY/(accelX**2 + accelZ**2)**0.5) # from doc
-    return roll
+    return (180/np.pi)*roll
 
 def pitch_am(accelX,accelY,accelZ):
     pitch = np.arctan(accelX/(accelY**2 + accelZ**2)**0.5) # from doc
-    return pitch
+    return (180/np.pi)*pitch
 
 def yaw_am(accelX,accelY,accelZ,magX,magY,magZ):
     roll = roll_am(accelX,accelY,accelZ)
@@ -84,7 +84,7 @@ def calibrate_mag():
     avgY = (minY + maxY) / 2
     avgZ = (minZ + maxZ) / 2
     print("Calibration complete.")
-    return [avgX, avgY, avgZ]
+    return [(180/np.pi)*avgX, (180/np.pi)*avgY, (180/np.pi)*avgZ]
 
 def calibrate_gyro():
     minX, minY, minZ = sensor.gyro
